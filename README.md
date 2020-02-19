@@ -1,7 +1,7 @@
 
 ---
 
-# Project Name
+# Enumerable methods
 
 > This project is completed by Oscar Alfredo Gómez Elizarrarás, in partial requirements of the Microverse cirriculum. 
 
@@ -27,11 +27,11 @@ url of the demo
 
 ### Dependencies
 
-If there are dependencies
+- Rubocop to check style errors.
 
 ### Install
 
-`git clone https://github.com/AlfredoElizarraras/project-name.git`
+`git clone https://github.com/AlfredoElizarraras/ruby-my-enumerables.git`
 
 #### On command line:
 `bundler install`
@@ -50,7 +50,7 @@ If there are dependencies
 
 Contributions, issues and feature requests are welcome!
 
-Feel free to check the [issues page](https://github.com/AlfredoElizarraras/project-name/issues).
+Feel free to check the [issues page](https://github.com/AlfredoElizarraras/ruby-my-enumerables/issues).
 
 ## Show your support
 
@@ -65,7 +65,7 @@ Give a ⭐️ if you like this project!
 
 ## 📝 License
 
-This project is [MIT](lic.url) licensed.
+This project is [MIT](https://github.com/AlfredoElizarraras/ruby-my-enumerables/blob/master/LICENSE) licensed.
 
 Copyright 2019 Oscar Alfredo Gómez Elizarrarás
 
