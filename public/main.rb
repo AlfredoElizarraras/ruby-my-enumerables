@@ -67,14 +67,17 @@ module Enumerable
     end
     return_value
   end
+
+  def my_count(*eval)
+    return_value = 0
+    sum_one = -> (bool) { return_value += 1 if bool }
+
+    if block_given?
+      self.my_each { |indx| sum_one.call(yield(indx)) }
+    else
+      self.my_each { |indx| eval.empty? ? return_value += 1 : sum_one.call(eval[0] == indx) }
+    end
+
+    return_value
+  end
 end
-
-
-p %w{ant bear cat}.none? { |word| word.length == 5 } #=> true
-p %w{ant bear cat}.none? { |word| word.length >= 4 } #=> false
-p %w{ant bear cat}.none?(/d/)                        #=> true
-p [1, 3.14, 42].none?(Float)                         #=> false
-p [].none?                                           #=> true
-p [nil].none?                                        #=> true
-p [nil, false].none?                                 #=> true
-p [nil, false, true].none?                           #=> false
