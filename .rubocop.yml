@@ -33,6 +33,8 @@ Style/FrozenStringLiteralComment:
   EnforcedStyle: never
 Style/CaseEquality:
   Enabled: false
+Style/For:
+  Enabled: false
 
 Layout/HashAlignment:
   EnforcedColonStyle: key
