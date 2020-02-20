@@ -22,7 +22,7 @@ module Enumerable
     return to_enum(:my_select) unless block_given?
 
     arr = []
-    self.my_each {|indx| arr.push(indx) if yield(indx) }
+    self.my_each { |indx| arr.push(indx) if yield(indx) }
     arr
   end
 
@@ -30,18 +30,24 @@ module Enumerable
     return_value = true
     return return_value unless block_given?
 
-    self.my_each do |indx| 
+    self.my_each do |indx|
       return_value = yield(indx)
       break unless return_value
     end
     return_value
   end
+
+  def my_any?(eval = nil)
+    return_value = false
+
+    if block_given?
+      self.my_each do |indx|
+        return_value = yield(indx)
+        break if return_value
+      end
+    else
+      return_value = self.my_all? { |obj| eval === obj }
+    end
+    return_value
+  end
 end
-
-
-p %w[ant bear cat].all? { |word| word.length >= 3 } #=> true
-p %w[ant bear cat].all? { |word| word.length >= 4 } #=> false
-p %w[ant bear cat].all?(/t/)                        #=> false
-p [1, 2i, 3.14].all?(Numeric)                       #=> true
-p [nil, true, 99].all?                              #=> false
-p [].all?  
