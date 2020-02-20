@@ -80,4 +80,11 @@ module Enumerable
 
     return_value
   end
+
+  def my_map
+    return to_enum(:my_map) unless block_given?
+    arr = []
+    self.my_each { |indx| arr.push(yield(indx)) }
+    arr
+  end
 end
