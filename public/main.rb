@@ -26,14 +26,17 @@ module Enumerable
     arr
   end
 
-  def my_all?
+  def my_all?( eval = nil )
     return_value = true
-    return return_value unless block_given?
 
-    self.my_each do |indx|
-      return_value = yield(indx)
-      break unless return_value
-    end
+    if block_given?
+      self.my_each do |indx| 
+        return_value = yield(indx)
+        break unless return_value
+      end
+    else
+      return_value = self.my_all? { |obj| eval === obj }
+    end 
     return_value
   end
 

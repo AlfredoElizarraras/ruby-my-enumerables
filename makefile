@@ -1,4 +1,9 @@
 git:
 	git add .
 	git commit -m "$m"
-	git flow feature finish $f
+ifeq ($b, b)
+	git flow bugfix finish $f
+endif
+ifeq ($b, f)
+	git flow bugfix finish $f
+endif
