@@ -1,3 +1,4 @@
+
 # Each
 module Enumerable
   def my_each
@@ -83,8 +84,52 @@ module Enumerable
 
   def my_map
     return to_enum(:my_map) unless block_given?
+
     arr = []
     self.my_each { |indx| arr.push(yield(indx)) }
     arr
   end
+
+  def my_inject(*args)
+    memo = nil
+    sym = nil
+    is_array = -> do
+      case self
+        when Array
+          memo = self[0]
+        else
+          memo = self.to_a[0]
+      end
+    end
+
+    if args.my_count == 1
+      unless block_given?
+        if (Symbol === args[0] || String === args[0])
+          sym = args[0].to_sym
+          self.my_each { |indx| memo = memo.nil? ? indx : memo.send(sym, indx) }
+        else
+          raise TypeError, "#{args[0]} is not a symbol nor a string"
+        end
+      else
+        self.my_each { |indx| memo = memo.nil? ? indx : yield(memo,indx) }
+      end
+    elsif args.my_count == 2
+      memo = args[0]
+      sym = args[1]
+    else
+      is_array.call
+    end
+
+    memo
+  end
+
 end
+
+#(5..10).my_inject { |sum, n| sum + n }            #=> 45
+"_______________________________________________"
+p "/", (1..5).my_inject(:*) #{ |product, n| n * product } #=> 151200
+"_______________________________________________"
+#longest = %w{ cat sheep bear }.my_inject do |memo, word|
+#   memo.length > word.length ? memo : word
+#end
+#longest                                        #=> "sheep"
