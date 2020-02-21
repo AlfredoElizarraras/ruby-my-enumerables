@@ -115,17 +115,7 @@ def multiply_els(arr)
   array.my_inject(:*)
 end
 
-# p multiply_els([2, 4, 5])
-
-# Same using a block and inject
-p (5..10).my_inject { |sum, n| sum + n }            #=> 45
-# Same using a block
-p (5..10).my_inject(1) { |product, n| product * n } #=> 151200
-# find the longest word
-longest = %w{ cat sheep bear }.my_inject do |memo, word|
-   memo.length > word.length ? memo : word
-end
-p longest                                        #=> "sheep"
+p multiply_els([2, 4, 5])
 
 # rubocop: enable Style/CaseEquality
 # rubocop: enable Metrics/ModuleLength, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
