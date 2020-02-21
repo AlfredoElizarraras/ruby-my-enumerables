@@ -95,9 +95,9 @@ module Enumerable
     sym = nil
 
     is_symbol_number = -> (value) do
-      if Symbol === value || String === value
+      if Symbol === value || String === value 
           sym = value.to_sym
-      elsif Numeric === args[0]
+      elsif Numeric === args[0] && block_given?
         memo = args[0]
       else
         raise TypeError, "#{value} is not a symbol nor a string"
@@ -110,30 +110,12 @@ module Enumerable
 
     if args.my_count == 1 
       is_symbol_number.call(args[0]) unless block_given?
-      do_loop.call
     elsif args.my_count == 2
       is_symbol_number.call(args[1])
-      do_loop.call
-    else
-      do_loop.call
     end
+    do_loop.call
 
     memo
   end
 
 end
-
-p (5..10).my_inject { |sum, n| sum + n }                            #=> 45
-p (5..10).my_inject(1) { |product, n| product * n }                 #=> 151200
-longest = %w{ cat sheep bear }.my_inject do |memo, word|
-   memo.length > word.length ? memo : word
-end
-p longest                                                           #=> "sheep"
-p [1,2,3,4].my_inject{|a,b| a+b}                                    #=> 10
-p [1,2,3,4].my_inject(:+)                                           #=> 10
-p [true, true, true].my_inject(:&)                                  #=> true
-p [true, false, true].my_inject(:&)                                 #=> false
-x = [1,2,3,4].my_inject do |running_total, number| 
-  running_total + number
-end   
-p x                                                                   # => 10
