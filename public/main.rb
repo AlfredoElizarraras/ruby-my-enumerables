@@ -1,6 +1,3 @@
-# rubocop: disable Style/CaseEquality
-# rubocop: disable Metrics/ModuleLength, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-
 module Enumerable
   def my_each
     return to_enum(:my_each) unless block_given?
@@ -91,20 +88,22 @@ module Enumerable
     arr
   end
 
-  def my_inject(*args)
+  def my_inject(*values)
     memo = nil
     sym = nil
     is_symbol_number = lambda do |value|
       sym = value.to_sym if Symbol === value || String === value
-      memo = args[0] if Numeric === args[0] && block_given?
-      raise TypeError, "#{value} is not a symbol nor a string" unless Symbol === value || String === value || (Numeric === args[0] && block_given?)
+      memo = values[0] if Numeric === values[0] && block_given?
+      unless Symbol === value || String === value || (Numeric === values[0] && block_given?)
+        raise TypeError, "#{value} is not a symbol nor a string"
+      end
     end
     do_loop = lambda do
       my_each { |indx| memo = memo.nil? ? indx : yield(memo, indx) } if block_given?
       my_each { |indx| memo = memo.nil? ? indx : memo.send(sym, indx) } unless block_given?
     end
-    is_symbol_number.call(args[0]) if args.my_count == 1 && !block_given?
-    is_symbol_number.call(args[1]) if args.my_count == 2
+    is_symbol_number.call(values[0]) if values.my_count == 1 && !block_given?
+    is_symbol_number.call(values[1]) if values.my_count == 2
     do_loop.call
     memo
   end
@@ -116,6 +115,3 @@ def multiply_els(arr)
 end
 
 p multiply_els([2, 4, 5])
-
-# rubocop: enable Style/CaseEquality
-# rubocop: enable Metrics/ModuleLength, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
