@@ -93,31 +93,29 @@ module Enumerable
   def my_inject(*args)
     memo = nil
     sym = nil
-    is_array = -> do
-      case self
-        when Array
-          memo = self[0]
-        else
-          memo = self.to_a[0]
-      end
+
+    is_symbol_number = -> (value) do
+      if Symbol === value || String === value
+          sym = value.to_sym
+      elsif Numeric === args[0]
+        memo = args[0]
+      else
+        raise TypeError, "#{value} is not a symbol nor a string"
+      end  
     end
 
-    if args.my_count == 1
-      unless block_given?
-        if (Symbol === args[0] || String === args[0])
-          sym = args[0].to_sym
-          self.my_each { |indx| memo = memo.nil? ? indx : memo.send(sym, indx) }
-        else
-          raise TypeError, "#{args[0]} is not a symbol nor a string"
-        end
-      else
-        self.my_each { |indx| memo = memo.nil? ? indx : yield(memo,indx) }
-      end
+    do_loop = -> do
+      self.my_each { |indx| memo = memo.nil? ? indx : block_given? ? yield(memo,indx) : memo.send(sym, indx) }
+    end
+
+    if args.my_count == 1 
+      is_symbol_number.call(args[0]) unless block_given?
+      do_loop.call
     elsif args.my_count == 2
-      memo = args[0]
-      sym = args[1]
+      is_symbol_number.call(args[1])
+      do_loop.call
     else
-      is_array.call
+      do_loop.call
     end
 
     memo
@@ -125,11 +123,17 @@ module Enumerable
 
 end
 
-#(5..10).my_inject { |sum, n| sum + n }            #=> 45
-"_______________________________________________"
-p "/", (1..5).my_inject(:*) #{ |product, n| n * product } #=> 151200
-"_______________________________________________"
-#longest = %w{ cat sheep bear }.my_inject do |memo, word|
-#   memo.length > word.length ? memo : word
-#end
-#longest                                        #=> "sheep"
+p (5..10).my_inject { |sum, n| sum + n }                            #=> 45
+p (5..10).my_inject(1) { |product, n| product * n }                 #=> 151200
+longest = %w{ cat sheep bear }.my_inject do |memo, word|
+   memo.length > word.length ? memo : word
+end
+p longest                                                           #=> "sheep"
+p [1,2,3,4].my_inject{|a,b| a+b}                                    #=> 10
+p [1,2,3,4].my_inject(:+)                                           #=> 10
+p [true, true, true].my_inject(:&)                                  #=> true
+p [true, false, true].my_inject(:&)                                 #=> false
+x = [1,2,3,4].my_inject do |running_total, number| 
+  running_total + number
+end   
+p x                                                                   # => 10
