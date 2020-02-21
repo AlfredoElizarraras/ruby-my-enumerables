@@ -1,3 +1,4 @@
+
 # Each
 module Enumerable
   def my_each
@@ -83,8 +84,38 @@ module Enumerable
 
   def my_map
     return to_enum(:my_map) unless block_given?
+
     arr = []
     self.my_each { |indx| arr.push(yield(indx)) }
     arr
   end
+
+  def my_inject(*args)
+    memo = nil
+    sym = nil
+
+    is_symbol_number = -> (value) do
+      if Symbol === value || String === value 
+          sym = value.to_sym
+      elsif Numeric === args[0] && block_given?
+        memo = args[0]
+      else
+        raise TypeError, "#{value} is not a symbol nor a string"
+      end  
+    end
+
+    do_loop = -> do
+      self.my_each { |indx| memo = memo.nil? ? indx : block_given? ? yield(memo,indx) : memo.send(sym, indx) }
+    end
+
+    if args.my_count == 1 
+      is_symbol_number.call(args[0]) unless block_given?
+    elsif args.my_count == 2
+      is_symbol_number.call(args[1])
+    end
+    do_loop.call
+
+    memo
+  end
+
 end
