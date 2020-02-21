@@ -119,3 +119,10 @@ module Enumerable
   end
 
 end
+
+def multiply_els(arr)
+  array = Array(arr) rescue []
+  x = array.my_inject(:*)
+end
+
+p multiply_els([2,4,5])
