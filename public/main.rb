@@ -92,8 +92,7 @@ module Enumerable
   end
 
   def my_inject(*args)
-    memo = nil
-    sym = nil
+    memo, sym = nil, nil
 
     is_symbol_number = lambda do |value|
       if Symbol === value || String === value
@@ -106,13 +105,15 @@ module Enumerable
     end
 
     do_loop = lambda do
-      my_each { |indx| memo = memo.nil? ? indx : block_given? ? yield(memo, indx) : memo.send(sym, indx) }
+      if block_given?
+        my_each { |indx| memo = memo.nil? ? indx : yield(memo, indx) }
+      else
+        my_each { |indx| memo = memo.nil? ? indx : memo.send(sym, indx) }
+      end
     end
 
-    if args.my_count == 1
-      unless block_given?
-        is_symbol_number.call(args[0])
-      end
+    if args.my_count == 1 && !block_given?
+      is_symbol_number.call(args[0])
     elsif args.my_count == 2
       is_symbol_number.call(args[1])
     end
@@ -123,8 +124,8 @@ module Enumerable
 end
 
 def multiply_els(arr)
-  array = Array(arr) rescue []
-  x = array.my_inject(:*)
+  array = Array(arr)
+  array.my_inject(:*)
 end
 
 p multiply_els([2, 4, 5])
