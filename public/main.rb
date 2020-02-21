@@ -92,33 +92,20 @@ module Enumerable
   end
 
   def my_inject(*args)
-    memo, sym = nil, nil
-
+    memo = nil
+    sym = nil
     is_symbol_number = lambda do |value|
-      if Symbol === value || String === value
-        sym = value.to_sym
-      elsif Numeric === args[0] && block_given?
-        memo = args[0]
-      else
-        raise TypeError, "#{value} is not a symbol nor a string"
-      end
+      sym = value.to_sym if Symbol === value || String === value
+      memo = args[0] if Numeric === args[0] && block_given?
+      raise TypeError, "#{value} is not a symbol nor a string" unless Symbol === value || String === value || (Numeric === args[0] && block_given?)
     end
-
     do_loop = lambda do
-      if block_given?
-        my_each { |indx| memo = memo.nil? ? indx : yield(memo, indx) }
-      else
-        my_each { |indx| memo = memo.nil? ? indx : memo.send(sym, indx) }
-      end
+      my_each { |indx| memo = memo.nil? ? indx : yield(memo, indx) } if block_given?
+      my_each { |indx| memo = memo.nil? ? indx : memo.send(sym, indx) } unless block_given?
     end
-
-    if args.my_count == 1 && !block_given?
-      is_symbol_number.call(args[0])
-    elsif args.my_count == 2
-      is_symbol_number.call(args[1])
-    end
+    is_symbol_number.call(args[0]) if args.my_count == 1 && !block_given?
+    is_symbol_number.call(args[1]) if args.my_count == 2
     do_loop.call
-
     memo
   end
 end
@@ -128,7 +115,17 @@ def multiply_els(arr)
   array.my_inject(:*)
 end
 
-p multiply_els([2, 4, 5])
+# p multiply_els([2, 4, 5])
+
+# Same using a block and inject
+p (5..10).my_inject { |sum, n| sum + n }            #=> 45
+# Same using a block
+p (5..10).my_inject(1) { |product, n| product * n } #=> 151200
+# find the longest word
+longest = %w{ cat sheep bear }.my_inject do |memo, word|
+   memo.length > word.length ? memo : word
+end
+p longest                                        #=> "sheep"
 
 # rubocop: enable Style/CaseEquality
 # rubocop: enable Metrics/ModuleLength, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
