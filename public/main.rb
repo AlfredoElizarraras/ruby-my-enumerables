@@ -58,13 +58,16 @@ module Enumerable
 
     if block_given?
       my_each do |indx|
-        return_value = !yield(indx)
+        return_value = yield(indx)
         break if return_value
       end
     else
-      return_value = my_all? { |obj| eval === obj }
+      return_value = my_all? do |obj| 
+        return_value = eval === obj
+        break if return_value
+      end
     end
-    return_value
+    !return_value
   end
 
   def my_count(*eval)
@@ -114,4 +117,13 @@ def multiply_els(arr)
   array.my_inject(:*)
 end
 
-p multiply_els([2, 4, 5])
+#p multiply_els([2, 4, 5])
+#p %w{ant bear cat}.my_none? { |word| word.length == 5 } #=> true
+#p %w{ant bear cat}.my_none? { |word| word.length >= 4 } #=> false
+#p %w{ant bear cat}.my_none?(/d/)                        #=> true
+#p [1, 3.14, 42].none?(Float)                         #=> false
+#p [].none?                                           #=> true
+#p [nil].none?                                        #=> true
+p [nil, false].none?                                 #=> true
+p [nil, false, true].none?                           #=> false
+p [1, 2, 3].my_none?(String)                          #=> true
