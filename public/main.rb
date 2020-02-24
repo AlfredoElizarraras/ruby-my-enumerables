@@ -1,9 +1,14 @@
+# rubocop: disable Style/CaseEquality
+# rubocop: disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+
 module Enumerable
   def my_each
     return to_enum(:my_each) unless block_given?
 
-    for indx in self do
-      yield(indx)
+    indx = 0
+    while indx < length
+      yield(self[indx])
+      indx += 1
     end
   end
 
@@ -11,8 +16,8 @@ module Enumerable
     return to_enum(:my_each_with_index) unless block_given?
 
     counter = 0
-    for indx in self do
-      yield(indx, counter)
+    while counter < length
+      yield(self[counter], counter)
       counter += 1
     end
   end
@@ -25,49 +30,46 @@ module Enumerable
     arr
   end
 
-  def my_all?(eval = nil)
-    return_value = true
-
-    if block_given?
-      my_each do |indx|
-        return_value = yield(indx)
-        break unless return_value
+  def my_all?(*eval)
+    my_each_with_index do |obj,indx|
+      if block_given?
+        return false unless yield(obj)
+      elsif eval.length == 1
+        return false unless eval[0] === obj
+      elsif false === obj || nil === obj
+        return false
       end
-    else
-      return_value = my_all? { |obj| eval === obj }
+      return true if indx == length - 1
     end
-    return_value
+    true if length.zero?
   end
 
-  def my_any?(eval = nil)
-    return_value = false
-
-    if block_given?
-      my_each do |indx|
-        return_value = yield(indx)
-        break if return_value
+  def my_any?(*eval)
+    my_each_with_index do |obj,indx|
+      if block_given?
+        return true if yield(obj)
+      elsif eval.length == 1
+        return true if eval[0] === obj
+      elsif true === obj
+        return true
       end
-    else
-      return_value = my_all? { |obj| eval === obj }
+      return false if indx == length - 1
     end
-    return_value
+    false if length.zero?
   end
 
-  def my_none?(eval = nil)
-    return_value = false
-
-    if block_given?
-      my_each do |indx|
-        return_value = yield(indx)
-        break if return_value
+  def my_none?(*eval)
+    my_each_with_index do |obj,indx|
+      if block_given?
+        return false if yield(obj)
+      elsif eval.length == 1
+        return false if eval[0] === obj
+      elsif true === obj
+        return false
       end
-    else
-      return_value = my_all? do |obj|
-        return_value = eval === obj
-        break if return_value
-      end
+      return true if indx == length - 1
     end
-    !return_value
+    true if length.zero?
   end
 
   def my_count(*eval)
@@ -117,4 +119,6 @@ def multiply_els(arr)
   array.my_inject(:*)
 end
 
-p multiply_els([2, 4, 5])
+# p multiply_els([2, 4, 5])
+# rubocop:enable Style/CaseEquality
+# rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
