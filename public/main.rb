@@ -1,14 +1,12 @@
-# rubocop: disable Style/CaseEquality
+# rubocop: disable Style/CaseEquality, Style/For
 # rubocop: disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
 module Enumerable
   def my_each
     return to_enum(:my_each) unless block_given?
 
-    indx = 0
-    while indx < length
-      yield(self[indx])
-      indx += 1
+    for indx in self do
+      yield(indx)
     end
   end
 
@@ -16,8 +14,8 @@ module Enumerable
     return to_enum(:my_each_with_index) unless block_given?
 
     counter = 0
-    while counter < length
-      yield(self[counter], counter)
+    for indx in self do
+      yield(indx, counter)
       counter += 1
     end
   end
@@ -31,7 +29,7 @@ module Enumerable
   end
 
   def my_all?(*eval)
-    my_each_with_index do |obj,indx|
+    my_each_with_index do |obj, indx|
       if block_given?
         return false unless yield(obj)
       elsif eval.length == 1
@@ -45,7 +43,7 @@ module Enumerable
   end
 
   def my_any?(*eval)
-    my_each_with_index do |obj,indx|
+    my_each_with_index do |obj, indx|
       if block_given?
         return true if yield(obj)
       elsif eval.length == 1
@@ -59,7 +57,7 @@ module Enumerable
   end
 
   def my_none?(*eval)
-    my_each_with_index do |obj,indx|
+    my_each_with_index do |obj, indx|
       if block_given?
         return false if yield(obj)
       elsif eval.length == 1
@@ -98,7 +96,7 @@ module Enumerable
     sym = nil
     is_symbol_number = lambda do |value|
       sym = value.to_sym if Symbol === value || String === value
-      memo = values[0] if Numeric === values[0] && block_given?
+      memo = values[0] if Numeric === values[0]
       unless Symbol === value || String === value || (Numeric === values[0] && block_given?)
         raise TypeError, "#{value} is not a symbol nor a string"
       end
@@ -119,6 +117,6 @@ def multiply_els(arr)
   array.my_inject(:*)
 end
 
-# p multiply_els([2, 4, 5])
-# rubocop:enable Style/CaseEquality
+p multiply_els([2, 4, 5])
+# rubocop:enable Style/CaseEquality, Style/For
 # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
