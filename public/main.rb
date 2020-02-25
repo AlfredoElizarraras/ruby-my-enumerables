@@ -91,7 +91,7 @@ module Enumerable
     arr
   end
 
- def my_inject(*values)
+  def my_inject(*values)
     memo = nil
     sym = nil
     is_symbol_number = lambda do |value|
