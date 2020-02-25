@@ -91,23 +91,19 @@ module Enumerable
     arr
   end
 
-  def my_inject(*values)
+ def my_inject(*values)
     memo = nil
     sym = nil
     is_symbol_number = lambda do |value|
       sym = value.to_sym if Symbol === value || String === value
-      memo = values[0] if Numeric === values[0]
-      unless Symbol === value || String === value || (Numeric === values[0] && block_given?)
-        raise TypeError, "#{value} is not a symbol nor a string"
-      end
+      memo = values[0] unless Symbol === values[0] || String === values[0]
     end
-    do_loop = lambda do
-      my_each { |indx| memo = memo.nil? ? indx : yield(memo, indx) } if block_given?
-      my_each { |indx| memo = memo.nil? ? indx : memo.send(sym, indx) } unless block_given?
-    end
-    is_symbol_number.call(values[0]) if values.my_count == 1 && !block_given?
+    is_symbol_number.call(values[0]) if values.my_count == 1
     is_symbol_number.call(values[1]) if values.my_count == 2
-    do_loop.call
+    my_each do |indx|
+      memo = memo.nil? ? indx : yield(memo, indx) if block_given?
+      memo = memo.nil? ? indx : memo.send(sym, indx) unless block_given?
+    end
     memo
   end
 end
