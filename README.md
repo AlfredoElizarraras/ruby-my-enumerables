@@ -1,17 +1,27 @@
 
 ---
 
-# Project Name
+# Enumerable methods
 
-> This project is completed by Oscar Alfredo Gómez Elizarrarás, in partial requirements of the Microverse cirriculum. 
+> This project is completed by Oscar Alfredo Gómez Elizarrarás, in partial requirements of the Microverse cirriculum and Odin project specifications by the following:
 
-![Screenshot - 1920 x 1080 ](/assets/screenshot.jpg?raw=true "Screenshot")
+  1.  Create #my_each, a method that is identical to #each but (obviously) does not use #each. You’ll need to remember the yield statement. Make sure it returns the same thing as #each as well.
+  2.  Create #my_each_with_index in the same way.
+  3.  Create #my_select in the same way, though you may use #my_each in your definition (but not #each).
+  4.  Create #my_all? (continue as above)
+  5.  Create #my_any?
+  6.  Create #my_none?
+  7.  Create #my_count
+  8.  Create #my_map
+  9.  Create #my_inject
+  10.  Test your #my_inject by creating a method called #multiply_els which multiplies all the elements of the array together by using #my_inject, e.g. multiply_els(\[2,4,5]) #=> 40
+  11.  Modify your #my_map method to take a proc instead.
+  12.  Modify your #my_map method to take either a proc or a block. It won’t be necessary to apply both a proc and a block in the same #my_map call since you could get the same effect by chaining together one #my_map call with the block and one with the proc. This approach is also clearer, since the user doesn’t have to remember whether the proc or block will be run first. So if both a proc and a block are given, only execute the proc.
 
----
 
-## Live Demo
-
-url of the demo
+- ![Screenshot - 1920 x 1080 ](/assets/ruby-code.jpeg?raw=true "Screenshot")
+- ![Screenshot - 1920 x 1080 ](/assets/ruby-code1.jpeg?raw=true "Screenshot")
+- ![Screenshot - 1920 x 1080 ](/assets/ruby-code2.jpeg?raw=true "Screenshot")
 
 ---
 
@@ -27,11 +37,11 @@ url of the demo
 
 ### Dependencies
 
-If there are dependencies
+- Rubocop to check style errors.
 
 ### Install
 
-`git clone https://github.com/AlfredoElizarraras/project-name.git`
+`git clone https://github.com/AlfredoElizarraras/ruby-my-enumerables.git`
 
 #### On command line:
 `bundler install`
@@ -50,7 +60,7 @@ If there are dependencies
 
 Contributions, issues and feature requests are welcome!
 
-Feel free to check the [issues page](https://github.com/AlfredoElizarraras/project-name/issues).
+Feel free to check the [issues page](https://github.com/AlfredoElizarraras/ruby-my-enumerables/issues).
 
 ## Show your support
 
@@ -65,7 +75,7 @@ Give a ⭐️ if you like this project!
 
 ## 📝 License
 
-This project is [MIT](lic.url) licensed.
+This project is [MIT](https://github.com/AlfredoElizarraras/ruby-my-enumerables/blob/master/LICENSE) licensed.
 
 Copyright 2019 Oscar Alfredo Gómez Elizarrarás
 
