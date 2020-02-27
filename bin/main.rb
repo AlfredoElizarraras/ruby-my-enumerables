@@ -78,7 +78,7 @@ module Enumerable
     if block_given?
       my_each { |indx| sum_one.call(yield(indx)) }
     else
-      my_each { |indx| eval.empty? ? return_value += 1 : sum_one.call(eval[0] == indx) }
+      my_each { |indx| eval.empty? ? return_value += 1 : sum_one.call(eval[0] === indx) }
     end
 
     return_value
