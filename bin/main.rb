@@ -25,6 +25,7 @@ module Enumerable
 
     arr = []
     my_each { |indx| arr.push(indx) if yield(indx) }
+    arr = arr.to_h if Hash === self
     arr
   end
 
@@ -77,7 +78,7 @@ module Enumerable
     if block_given?
       my_each { |indx| sum_one.call(yield(indx)) }
     else
-      my_each { |indx| eval.empty? ? return_value += 1 : sum_one.call(eval[0] == indx) }
+      my_each { |indx| eval.empty? ? return_value += 1 : sum_one.call(eval[0] === indx) }
     end
 
     return_value
@@ -112,6 +113,6 @@ def multiply_els(arr)
   array = Array(arr)
   array.my_inject(:*)
 end
-p multiply_els([2, 4, 5])
+multiply_els([2, 4, 5])
 # rubocop:enable Style/CaseEquality, Style/For
 # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
